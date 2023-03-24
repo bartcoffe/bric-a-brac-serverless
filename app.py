@@ -3,12 +3,13 @@ import os
 
 import aws_cdk as cdk
 
-from bric_a_brac_serverless.bric_a_brac_serverless_stack import BricABracServerlessStack
+from backend.component import Backend
 
 app = cdk.App()
-BricABracServerlessStack(
+
+Backend(
     app,
-    "BricABracServerlessStack",
+    "Backend",
     env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'),
                         region=os.getenv('CDK_DEFAULT_REGION')),
 )

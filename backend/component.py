@@ -3,6 +3,7 @@ from constructs import Construct
 
 from backend.api.infrastructure import API
 from backend.database.infrastructure import Database
+from backend.hosting.infrastructure import Hosting
 
 
 class Backend(cdk.Stack):
@@ -18,6 +19,12 @@ class Backend(cdk.Stack):
             self,
             "FlashcardsAPI",
             dynamodb_table_name=database.dynamodb_table.table_name,
+        )
+        hosting = Hosting(
+            self,
+            "FlashcardsHosting",
+            api.api.url,
+            self.region,
         )
 
         database.dynamodb_table.grant_read_write_data(

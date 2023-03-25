@@ -9,28 +9,43 @@ class API(Construct):
                  dynamodb_table_name: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        self.get_flashcards_lambda = lambda_.Function(
+        self.api = apigateway.RestApi(self, "flashcarads-api")
+        flashcards = self.api.root.add_resource('flashcards')
+        user_flashcards = flashcards.add_resource('{user_id}')
+        flashcard = user_flashcards.add_resource('{flashcard_id}')
+
+        self.get_user_flashcards_lambda = lambda_.Function(
             self,
-            'API_handler',
+            'get_user_flashcards',
             runtime=lambda_.Runtime.PYTHON_3_7,
-            code=lambda_.Code.from_asset('backend/api/runtime/get_flashcards'),
+            code=lambda_.Code.from_asset(
+                'backend/api/runtime/get_user_flashcards'),
             handler='lambda_function.handler',
             environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
         )
-        self.api = apigateway.RestApi(self, "flashcarads-api")
-
-        flashcards = self.api.root.add_resource('flashcards')
-        flashcards.add_method(
+        user_flashcards.add_method(
             'GET',
             apigateway.LambdaIntegration(
-                self.get_flashcards_lambda,
+                self.get_user_flashcards_lambda
                 #  request_templates={
                 #      "application/json":
                 #      '{ "statusCode": "200" }'}
             ))
 
-        # flashcard = flashcards.add_resource('{flashcard_id}')
-        # flashcard.add_method('POST')
-        # flashcard.add_method('GET')
-        # flashcard.add_method('PUT')
-        # flashcard.add_method('DELETE')
+        self.put_flashcard_lambda = lambda_.Function(
+            self,
+            'put_flashcard',
+            runtime=lambda_.Runtime.PYTHON_3_7,
+            code=lambda_.Code.from_asset('backend/api/runtime/put_flashcard'),
+            handler='lambda_function.handler',
+            environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
+        )
+
+        user_flashcards.add_method(
+            'PUT',
+            apigateway.LambdaIntegration(
+                self.put_flashcard_lambda,
+                #  request_templates={
+                #      "application/json":
+                #      '{ "statusCode": "200" }'}
+            ))

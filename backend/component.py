@@ -20,15 +20,16 @@ class Backend(cdk.Stack):
             "FlashcardsAPI",
             dynamodb_table_name=database.dynamodb_table.table_name,
         )
-        hosting = Hosting(
-            self,
-            "FlashcardsHosting",
-            api.api.url,
-            self.region,
-        )
+        # hosting = Hosting(
+        #     self,
+        #     "FlashcardsHosting",
+        #     api.api.url,
+        #     self.region,
+        # )
 
         database.dynamodb_table.grant_read_write_data(
-            api.get_flashcards_lambda)
+            api.get_user_flashcards_lambda)
+        database.dynamodb_table.grant_read_write_data(api.put_flashcard_lambda)
 
         self.api_endpoint = cdk.CfnOutput(
             self,

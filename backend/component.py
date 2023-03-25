@@ -30,6 +30,8 @@ class Backend(cdk.Stack):
         database.dynamodb_table.grant_read_write_data(
             api.get_user_flashcards_lambda)
         database.dynamodb_table.grant_read_write_data(api.put_flashcard_lambda)
+        database.dynamodb_table.grant_read_write_data(
+            api.delete_flashcard_lambda)
 
         self.api_endpoint = cdk.CfnOutput(
             self,

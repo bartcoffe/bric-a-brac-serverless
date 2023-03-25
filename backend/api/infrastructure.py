@@ -49,3 +49,21 @@ class API(Construct):
                 #      "application/json":
                 #      '{ "statusCode": "200" }'}
             ))
+        self.delete_flashcard_lambda = lambda_.Function(
+            self,
+            'delete_flashcard',
+            runtime=lambda_.Runtime.PYTHON_3_7,
+            code=lambda_.Code.from_asset(
+                'backend/api/runtime/delete_flashcard'),
+            handler='lambda_function.handler',
+            environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
+        )
+
+        flashcard.add_method(
+            'DELETE',
+            apigateway.LambdaIntegration(
+                self.delete_flashcard_lambda,
+                #  request_templates={
+                #      "application/json":
+                #      '{ "statusCode": "200" }'}
+            ))

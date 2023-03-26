@@ -9,7 +9,13 @@ class API(Construct):
                  dynamodb_table_name: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        self.api = apigateway.RestApi(self, "flashcarads-api")
+        self.api = apigateway.RestApi(self, "flashcarads-api", 
+                                      default_cors_preflight_options=apigateway.CorsOptions(
+                                          allow_methods=apigateway.Cors.ALL_METHODS,
+                                          allow_origins=apigateway.Cors.ALL_ORIGINS,
+                                          allow_headers=['*'],
+                                      )
+                                      )
         flashcards = self.api.root.add_resource('flashcards')
         user_flashcards = flashcards.add_resource('{user_id}')
         flashcard = user_flashcards.add_resource('{flashcard_id}')
@@ -26,10 +32,10 @@ class API(Construct):
         user_flashcards.add_method(
             'GET',
             apigateway.LambdaIntegration(
-                self.get_user_flashcards_lambda
-                #  request_templates={
-                #      "application/json":
-                #      '{ "statusCode": "200" }'}
+                self.get_user_flashcards_lambda,
+                 request_templates={
+                     "application/json":
+                     '{ "statusCode": "200" }'}
             ))
 
         self.put_flashcard_lambda = lambda_.Function(
@@ -45,9 +51,9 @@ class API(Construct):
             'PUT',
             apigateway.LambdaIntegration(
                 self.put_flashcard_lambda,
-                #  request_templates={
-                #      "application/json":
-                #      '{ "statusCode": "200" }'}
+                 request_templates={
+                     "application/json":
+                     '{ "statusCode": "200" }'}
             ))
         self.delete_flashcard_lambda = lambda_.Function(
             self,
@@ -63,7 +69,7 @@ class API(Construct):
             'DELETE',
             apigateway.LambdaIntegration(
                 self.delete_flashcard_lambda,
-                #  request_templates={
-                #      "application/json":
-                #      '{ "statusCode": "200" }'}
+                 request_templates={
+                     "application/json":
+                     '{ "statusCode": "200" }'}
             ))

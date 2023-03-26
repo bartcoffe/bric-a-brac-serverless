@@ -14,17 +14,21 @@ def handler(event, context):
         print(e)
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
         }
 
     table.delete_item(Key={
         'user_id': user_id,
-        'flashcard_id': flashcard_id,
+        'id': flashcard_id,
     })
 
     return {
-        'statusCode': 200,
+        'statusCode': 204,
         'headers': {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
         },
-        'body': 'deleted'
     }

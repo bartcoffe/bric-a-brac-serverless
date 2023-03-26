@@ -10,7 +10,7 @@ class Database(Construct):
 
         partition_key = dynamodb.Attribute(name="user_id",
                                            type=dynamodb.AttributeType.STRING)
-        sort_key = dynamodb.Attribute(name="flashcard_id",
+        sort_key = dynamodb.Attribute(name="id",
                                       type=dynamodb.AttributeType.STRING)
         self.dynamodb_table = dynamodb.Table(
             self,

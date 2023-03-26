@@ -10,6 +10,7 @@ def handler(event, context):
     try:
         user_id = json.loads(event['body'])['user_id']
         flashcard_id = json.loads(event['body'])['id']
+        category = json.loads(event['body'])['category']
         description = json.loads(event['body'])['description']
         code = json.loads(event['body'])['code']
         hashtag = json.loads(event['body'])['hashtag']
@@ -17,13 +18,19 @@ def handler(event, context):
     except Exception as e:
         print(e)
         return {
-            'statusCode': 500,
+        'statusCode': 500,
+        'headers': {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
         }
 
-    table.put_item(
+    }
+
+    respone = table.put_item(
         Item={
             'user_id': user_id,
-            'flashcard_id': flashcard_id,
+            'id': flashcard_id,
+            'category': category,
             'description': description,
             'code': code,
             'hashtag': hashtag,
@@ -31,9 +38,9 @@ def handler(event, context):
         })
 
     return {
-        'statusCode': 200,
+        'statusCode': 204,
         'headers': {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
         },
-        'body': 'all good'
     }

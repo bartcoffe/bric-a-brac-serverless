@@ -16,15 +16,14 @@ def handler(event, context):
         hashtag = json.loads(event['body'])['hashtag']
         status = json.loads(event['body'])['status']
     except Exception as e:
-        print(e)
+        #add logger
         return {
-        'statusCode': 500,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
         }
-
-    }
 
     respone = table.put_item(
         Item={

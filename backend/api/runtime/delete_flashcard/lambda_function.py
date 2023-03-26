@@ -1,5 +1,4 @@
 import os
-import json
 import boto3
 
 
@@ -11,7 +10,7 @@ def handler(event, context):
         user_id = event['pathParameters']['user_id']
         flashcard_id = event['pathParameters']['flashcard_id']
     except Exception as e:
-        print(e)
+        #add logger
         return {
             'statusCode': 500,
             'headers': {

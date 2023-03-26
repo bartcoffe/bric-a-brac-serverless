@@ -11,12 +11,12 @@ def handler(event, context):
     try:
         user_id = event['pathParameters']['user_id']
     except Exception as e:
-        print(e)
+        #add logger
         return {
             'statusCode': 500,
             'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
             }
         }
 
